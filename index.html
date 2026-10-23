@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Industrial Asset Tracking and Management Platform with DSA visualisations for inventory, maintenance, factory navigation and resource optimisation.">
+  <title>IndusTrack | Industrial Asset Tracking</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="#overview"><span class="brand-mark">IT</span><span><strong>IndusTrack</strong><small>INDUSTRIAL OPERATIONS</small></span></a>
+    <p class="nav-label">WORKSPACE</p>
+    <nav>
+      <a class="nav-link active" href="#overview">▦ <span>Overview</span></a>
+      <a class="nav-link" href="#inventory">▣ <span>Asset inventory</span></a>
+      <a class="nav-link" href="#maintenance">◷ <span>Maintenance queue</span></a>
+      <a class="nav-link" href="#factory">⌘ <span>Factory graph</span></a>
+      <a class="nav-link" href="#algorithms">⌁ <span>DSA lab</span></a>
+    </nav>
+    <div class="sidebar-bottom"><span class="live-dot"></span><strong>Prototype running</strong><small>Local browser storage · Demo data</small></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar" id="overview">
+      <div><p class="eyebrow">INDUSTRIAL ASSET TRACKING & MANAGEMENT PLATFORM</p><h1>Operations overview</h1><p class="muted">Asset visibility, maintenance priorities and factory navigation — powered by DSA concepts.</p></div>
+      <button class="primary" id="addAssetTop">＋ Register asset</button>
+    </header>
+
+    <section class="stats">
+      <article class="stat-card"><div class="stat-icon green-icon">▣</div><span class="stat-label">Registered assets</span><strong id="totalAssets">0</strong><span class="stat-foot">Across factory zones</span></article>
+      <article class="stat-card"><div class="stat-icon blue-icon">⌖</div><span class="stat-label">Factory zones</span><strong id="zoneCount">0</strong><span class="stat-foot">Connected locations</span></article>
+      <article class="stat-card"><div class="stat-icon amber-icon">◷</div><span class="stat-label">Attention required</span><strong id="attentionAssets">0</strong><span class="stat-foot">Maintenance or repair</span></article>
+      <article class="stat-card"><div class="stat-icon purple-icon">↗</div><span class="stat-label">Operational</span><strong id="operationalAssets">0</strong><span class="stat-foot">Ready for use</span></article>
+    </section>
+
+    <section class="panel" id="inventory">
+      <div class="panel-head"><div><p class="eyebrow">UNIT 1 · TREES & PRIORITY QUEUES</p><h2>Asset inventory</h2><p class="muted">Unique IDs, status tracking, tree-based lookup and sorted traversal.</p></div><button class="secondary" id="exportBtn">Export CSV ↓</button></div>
+      <div class="toolbar"><input id="searchInput" type="search" placeholder="Search asset ID, name or zone..." aria-label="Search assets"><select id="statusFilter" aria-label="Filter assets by status"><option value="All">All statuses</option><option>Operational</option><option>Maintenance</option><option>Repair</option><option>Retired</option></select><select id="treeOrder" aria-label="Inventory traversal"><option value="id">BST in-order · ID sorted</option><option value="name">Name sorted</option><option value="zone">Zone sorted</option></select></div>
+      <div class="table-wrap"><table><thead><tr><th>ASSET / ID</th><th>FACTORY ZONE</th><th>STATUS</th><th>LAST SERVICE</th><th>NEXT SERVICE</th><th>ACTIONS</th></tr></thead><tbody id="assetTable"></tbody></table></div>
+      <div id="emptyState" class="empty-state" hidden><div class="empty-icon">▣</div><h3>No matching assets</h3><p>Try another filter or register an asset.</p><button class="primary" id="addAssetEmpty">Register first asset</button></div>
+    </section>
+
+    <div class="two-col">
+      <section class="panel" id="maintenance">
+        <div class="panel-head"><div><p class="eyebrow">UNIT 1 · BINARY HEAP</p><h2>Maintenance priority queue</h2><p class="muted">Higher urgency is surfaced first, not just by entry order.</p></div><span class="pill">MAX-HEAP DEMO</span></div>
+        <div id="maintenanceList" class="queue-list"></div>
+        <p class="tiny-note">Demo priority is derived from status and due date. A production version should allow reviewed, configurable priority rules.</p>
+      </section>
+      <section class="panel" id="factory">
+        <div class="panel-head"><div><p class="eyebrow">UNIT 2 · GRAPH REPRESENTATION</p><h2>Factory zone network</h2><p class="muted">Nodes are zones; weighted edges are walkways / travel cost.</p></div><span class="pill">ADJACENCY LIST</span></div>
+        <div class="graph-summary"><span><i class="legend-node"></i> Zone</span><span><i class="legend-edge"></i> Path cost</span></div>
+        <div id="graphView" class="graph-view" aria-label="Factory zone graph"></div>
+        <div class="route-controls">
+          <label>Start zone<select id="startZone"></select></label>
+          <label>Destination<select id="endZone"></select></label>
+        </div>
+        <div class="button-row"><button class="secondary" id="bfsBtn">Run BFS</button><button class="secondary" id="dfsBtn">Run DFS</button><button class="primary" id="dijkstraBtn">Shortest route</button></div>
+        <div id="graphResult" class="result-box">Choose zones and run a graph algorithm.</div>
+      </section>
+    </div>
+
+    <section class="panel" id="algorithms">
+      <div class="panel-head"><div><p class="eyebrow">UNIT 2 & UNIT 3 · ALGORITHM APPLICATIONS</p><h2>DSA algorithms lab</h2><p class="muted">Run examples using the demo factory graph and maintenance items.</p></div></div>
+      <div class="algorithm-grid">
+        <article class="algorithm-card"><div class="algo-number">01</div><h3>Minimum spanning tree</h3><p>Prim’s and Kruskal’s connect all zones with minimum total edge cost.</p><div class="button-row"><button class="secondary" id="primBtn">Run Prim’s</button><button class="secondary" id="kruskalBtn">Run Kruskal’s</button></div><div id="mstResult" class="mini-result">No result yet.</div></article>
+        <article class="algorithm-card"><div class="algo-number">02</div><h3>0/1 Knapsack</h3><p>Select maintenance/spare-part items under a fixed budget.</p><label>Available budget <input id="budgetInput" type="number" min="1" value="120" step="10"></label><button class="primary full-btn" id="knapsackBtn">Optimise selection</button><div id="knapsackResult" class="mini-result">No result yet.</div></article>
+        <article class="algorithm-card"><div class="algo-number">03</div><h3>Resource allocation</h3><p>Illustrative assignment of limited technicians to highest-priority tasks.</p><label>Technicians available <input id="technicianInput" type="number" min="1" max="10" value="2"></label><button class="primary full-btn" id="allocateBtn">Allocate resources</button><div id="allocationResult" class="mini-result">No result yet.</div></article>
+      </div>
+      <div class="complexity-strip"><strong>Complexity notes</strong><span>Graph BFS / DFS: O(V + E)</span><span>Dijkstra with priority queue: O((V + E) log V)</span><span>0/1 Knapsack DP: O(nW)</span><span>MST Kruskal: O(E log E)</span></div>
+    </section>
+
+    <footer>Industrial Asset Tracking & Management Platform · DSA-II PBL · <span id="year"></span><br><span class="footer-note">Prototype: localStorage demo data, not a live RFID/GPS or multi-user system.</span></footer>
+  </main>
+
+  <dialog id="assetDialog">
+    <form id="assetForm">
+      <div class="dialog-head"><div><p class="eyebrow">ASSET REGISTER</p><h2 id="dialogTitle">Register asset</h2></div><button type="button" class="icon-button" id="closeDialog" aria-label="Close">×</button></div>
+      <input type="hidden" id="assetKey">
+      <label>Asset name<input id="assetName" required maxlength="80" placeholder="e.g. Hydraulic Press"></label>
+      <div class="form-grid"><label>Unique asset ID<input id="assetId" required maxlength="30" placeholder="e.g. AST-1005"></label><label>Factory zone<input id="assetLocation" required maxlength="80" placeholder="e.g. Assembly Line B"></label></div>
+      <div class="form-grid"><label>Status<select id="assetStatus"><option>Operational</option><option>Maintenance</option><option>Repair</option><option>Retired</option></select></label><label>Next service date<input id="nextService" type="date" required></label></div>
+      <label>Last service date<input id="lastService" type="date"></label>
+      <p id="formError" class="form-error" role="alert"></p>
+      <div class="dialog-actions"><button type="button" class="secondary" id="cancelDialog">Cancel</button><button type="submit" class="primary">Save asset</button></div>
+    </form>
+  </dialog>
+  <script src="app.js"></script>
+</body>
+</html>
