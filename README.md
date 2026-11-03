@@ -22,7 +22,9 @@ Manual tracking with spreadsheets and clipboards can make it difficult to find e
 - 0/1 Knapsack dynamic programming for selecting spare-part/maintenance items within a budget
 - Priority-based illustrative technician allocation
 - CSV export
-- Responsive dashboard UI
+- Responsive multi-page dashboard UI with dedicated module pages
+- Practical spare-parts inventory, procurement and consumption tracking
+- Factory reports, filters, CSV exports and printable analytics
 
 ## Technology used
 
@@ -34,8 +36,9 @@ Manual tracking with spreadsheets and clipboards can make it difficult to find e
 ## Run locally
 
 1. Open this folder in VS Code.
-2. Open `index.html` in a modern browser, or use the VS Code Live Server extension.
-3. Try registering assets and running the graph/algorithm controls.
+2. Right-click `index.html` and choose **Open with Live Server**.
+3. Use the sidebar to open Assets, Maintenance, Factory Network, Spare Parts, Scheduling, Optimization, Advanced Structures and Reports.
+4. The Dijkstra validation case is calculated by the algorithm: Receiving → Warehouse → Dispatch, cost 14. The Knapsack validation case calculates value 195 and cost 120 at capacity 120.
 
 No Node.js or database is required for this frontend prototype.
 
@@ -46,8 +49,9 @@ No Node.js or database is required for this frontend prototype.
 - Browser `localStorage` is local to the browser profile. Data is not shared across devices/users.
 - The prototype does not read real RFID, GPS, sensor or IoT feeds.
 - The inventory is indexed with an ordinary BST. A self-balancing AVL tree is **not yet implemented**; a plain BST can degrade to O(n) in the worst case.
-- Dijkstra is implemented with a simple minimum-distance scan, O(V² + E), rather than a priority queue optimisation.
-- Technician allocation is a simple greedy priority demonstration, not a globally optimal scheduling solver.
+- Dijkstra uses a binary min-heap and skips stale queue entries.
+- Scheduling uses a greedy graph-coloring algorithm; it is deterministic and prevents adjacent zones from sharing a slot.
+- Branch and Bound uses fractional value-density upper bounds and reports explored/pruned states.
 - Graph MST edges use demo costs and do not represent real construction costs.
 
 ## DSA mapping
@@ -64,19 +68,20 @@ No Node.js or database is required for this frontend prototype.
 | 0/1 Knapsack DP | Select items under budget | O(nW) time and O(nW) space |
 | Greedy priority allocation | Illustrative technician-task assignment | Sorting/heap dependent |
 
-## Next development milestones
+## Project pages
 
-1. Verify algorithms against hand-calculated test cases.
-2. Add a proper AVL tree and deletion/search complexity demonstration if required by the final rubric.
-3. Add PHP API and MySQL persistence if the project requires multi-user data.
-4. Add login and roles, input validation, error handling and audit history.
-5. Replace sample graph/weights with a documented factory layout.
-6. Add test cases, screenshots, architecture diagrams and final report.
+| Page | Responsibility |
+|---|---|
+| `index.html` | Dashboard and module navigation |
+| `assets.html` | BST inventory with add, search, edit and delete |
+| `maintenance.html` | Binary Max-Heap maintenance queue |
+| `factory-network.html` | Adjacency list, BFS, DFS, Dijkstra, Prim and Kruskal |
+| `spare-parts.html` | 0/1 Knapsack and DP table |
+| `reports.html` | Factory inventory, maintenance, stock and cost reports |
 
-## GitHub Desktop workflow
+## GitHub workflow
 
-1. Copy the project files into the root of the cloned repository.
-2. Open GitHub Desktop and inspect the Changes tab.
-3. Commit with a clear message such as `Implement DSA-based asset tracking prototype`.
-4. Click Push origin.
-5. Refresh the GitHub repository page and verify the files are visible.
+1. Review the Changes tab in GitHub Desktop or run `git status`.
+2. Commit with a message such as `Create modular DSA dashboard`.
+3. Push the branch to GitHub.
+4. For GitHub Pages, publish the repository root as the site source; all pages use relative links and require no server.
